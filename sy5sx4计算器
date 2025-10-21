@@ -1,0 +1,62 @@
+//还想加入对单个a的！，sqar....
+#nclude<iostream>
+using namespace std;
+int main() {
+	while (true) {
+		cout << " +++++++++++++++++++" << endl;
+		cout << "+     + : 加法      +" << endl;
+		cout << "+     - ：减法      +" << endl;
+		cout << "+     * ：乘法      +" << endl;
+		cout << "+     / ：除法      +" << endl;
+		cout << "+     % ：取余      +" << endl;
+		cout << " +++++++++++++++++++" << endl;
+		char choice;
+		double a, b;
+		int op1 = 0;
+		int op2=0;
+		cout << "请输入两个操作数a,b(以空格分隔）：";
+		cin >> a >> b;
+		cout << "请输入运算符号：";
+		cin >> choice;
+		switch (choice) {
+		case('+'):
+			cout << "a+b=" << a + b << endl;
+			break;
+		case('-'):
+			cout << "a-b=" << a - b << endl;
+			break;
+		case('*'):
+			cout << "a*b=" << a * b << endl;
+			break;
+		case('/'):
+			if (b != 0)
+				cout << "a/b=" << a / b << endl;
+			else
+				cout << "除数不能为零！" << endl;
+			break;
+		case('%'):
+			if (static_cast<int>(b) != 0)
+				cout << "(已将a,b转换为整数）a%b=" << static_cast<int>(a) % static_cast<int>(b) << endl;
+			else
+				cout << "除数不能为零！" << endl;
+			break;
+		default:
+			cout << "不支持此运算符号！" << endl;
+			break;
+
+		}
+
+		cout << "是否继续计算？(1:yes 0：no):";
+		cin >>op1;
+		if (op1 == 0)
+			break;
+		else {
+			cout << "是否清屏？(1:yes 0：no):";
+			cin >> op2;
+			if (op2 == 1)
+				system("cls");
+			continue;
+		}
+	}
+	return 0;
+}
