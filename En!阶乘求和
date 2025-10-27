@@ -1,0 +1,35 @@
+#include<iostream>
+using namespace std;
+int main() {
+	int n, i,r;
+	
+	long long sum = 1;
+	long long E = 0;
+	cout << "请输入项数n(n>0)" << endl;	
+	cin >>n;
+	//for (n = 20; E >=0; n++) {
+
+		for (i = 1; i <= n; i++) {
+			long long sum = 1;
+
+			for (r = 1; r <= i; r++) {
+				sum = r * sum;
+			}
+			E += sum;
+//int m=1;
+//for(int i=1;i<=n;i++)
+//{m=m*i
+//sum=sum+m}
+//之前大循环中的r小循环，每次都重新从第一项1开始1*2*3*。。。*n算阶乘，而每次m*i都借用了上次已经算好的n-1的阶乘，再*n
+//不用嵌套，关系也清晰多了
+			
+		}
+		if (E < 0)
+			cout << "sum过大，已溢出,n=" << n << endl;
+
+		cout << "结果是" << E << endl;
+
+	///}
+	return 0;
+
+}
