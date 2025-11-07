@@ -1,0 +1,143 @@
+#include<iostream>
+using namespace std;
+int main() {
+	const int h = 100;//最大行数
+	int H = 0;//实际行数
+	const int l = 100;//最大列数
+	int L = 0;//实际列数
+	int arry[h][l] = { 0 };
+	//确保输入的行数不超过100，确认实际行数
+	do {
+		cout << "请输入要输入的行总数" << endl;
+		cin >> H;
+		if (H > h)
+		{
+			cout << "行数过大，请重新输入一个小于100的数字" << endl;
+		}
+
+	} while (H > h);
+	//确保输入的列数不超过100，确认实际列数
+	do {
+		cout << "请输入要输入的列总数" << endl;
+		cin >> L;
+		if (L > l)
+		{
+			cout << "列数过大，请重新输入一个小于100的数字" << endl;
+		}
+
+	} while (L > l);
+	//开始输入数组
+	for (int i = 0; i < H; i++)
+	{
+		for (int j = 0; j < L; j++)
+		{
+			cout << "请输入第" << i + 1 << "行，第" << j + 1 << "列的值" << endl;
+			cin >> arry[i][j];
+		}
+	}
+	//开始寻找
+	int number = 0;//记录鞍点数量
+	//先找该行的最大值M，在判断是否为该列的最小值
+	int M[h] = { 0 };//存放每一行的最大值
+	int MH[h] = { 0 };//存放最大值所在的行号
+	int ML[h] = { 0 };//存放最大值所在的列号
+	for (int i = 0; i < H; i++)
+	{
+		M[i] = arry[i][0];
+		MH[i] = i;
+		ML[i] = 0;
+		for (int j = 1; j < L; j++)
+		{
+			if (arry[i][j ] > M[i]) {
+				M[i] = arry[i][j ];
+				MH[i] = i;
+				ML[i] = j ;
+			}
+		}
+	}
+	//努力复原了最开始的思路--拿着找到的每行最大值去和每列比较，
+	//arry[[]]是可以的，也没那么可怕
+	int flag = 1;//标志是否存在鞍点
+	for (int i = 0; i < H; i++){
+	
+		flag = 1;
+		for (int j = 0; j < H; j++)
+		{
+			if (arry[j][ML[i]] < M[i])
+			{
+				flag = 0;
+				break;
+			}
+
+		}
+		if (flag == 1) {
+		number = number + 1;//标志鞍点数量
+
+		cout << "存在鞍点，鞍点值为：" << M[i] << endl;
+		}
+		
+
+	}
+
+	if(number==0)
+	{
+		cout << "不存在鞍点" << endl;
+	}
+
+
+
+
+
+
+
+
+
+
+	/*int m[l] = {0};//存放每一列的最小值
+	int mh[l] = { 0 };//存放最小值所在的行号
+	int ml[l] = { 0 };//存放最小值所在的列号
+	for (int j = 0; j < L; j++)
+	{
+		m[j] = arry[0][j];
+		mh[j] = 0;
+		ml[j] = j;
+		for (int i = 1; i < H ; i++)
+		{
+
+			if (arry[i + 1][j] < m[j]) {
+				m[j] = arry[i + 1][j];
+				mh[j] = i+1;
+				ml[j] = j + 1;
+			}
+
+		}
+
+
+
+	}
+	int flag = 1;//标志是否存在鞍点
+	for (int i = 0; i < H; i++)
+	{
+		for(int j=0;j<L;j++)
+		if (MH[i] == mh[j] && ML[i] == ml[j])
+		{
+			cout << "存在鞍点，鞍点值为：" << M[i] << endl;
+			flag = 0;
+		}
+
+	}
+
+	if (flag == 1) 
+	{
+	cout << "不存在鞍点" << endl;
+	}
+	*/
+
+
+
+
+
+
+	return 0;
+
+}
