@@ -1,3 +1,6 @@
+//比较是否是该列最小时可以将自己跳过
+//不是所有列都含有找出的最大，有些列不用比较，同一列也应该只比一次
+
 #include<iostream>
 using namespace std;
 int main() {
