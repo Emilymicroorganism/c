@@ -1,0 +1,38 @@
+#include<iostream>
+using namespace std;
+int main() {
+	int n[100] = { 0};//人的状态，开始时都在
+	int N;//人数
+	int peopleleft = 0;
+	do {
+		cout << "请输入人数(小于100）" << endl;
+		cin >> N;
+	} while (N > 99||N<=0);
+	peopleleft = N;
+	for (int i = 1; i <= N; i++) {
+
+		n[i] = 1;
+	}
+	int* number = n;
+	
+	while (peopleleft > 1) {
+		for (int i = 1; i <= 3; i++) {
+			number++;
+			if (number > n + N)(number = n+1);
+			while (*number ==0) { 
+				number++;
+			if (number > n + N)(number = n+1);
+			}
+		}
+		*number = 0;
+		peopleleft--;
+	}
+
+	for (int j = 1; j <= N; j++)
+	
+	if(n[j]==1)
+	{
+		cout << j <<"号留下(从1开始编号）" << endl;
+	}
+	return 0;
+}
