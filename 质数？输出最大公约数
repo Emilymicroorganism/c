@@ -78,14 +78,14 @@ int main() {
 	return 0;
 }
 void find(int a) {
-	int i = a % 100;
-	int j = (a % 10 - 10*i);
-	int k = (a - 100 * i - 10 * j);
+	int i = a %10;
+	int j = (a %100 - i)/10;
+	int k = (a - 10 * j - 1 * i)/100;
 		if (i*i*i+j*j*j+k*k*k==a) {
 			cout << "是" << endl;
-			return;
-
 		}
 		else
-		cout << "是" << endl;
+		{
+			cout << "不是" << endl;
+		}
 }
