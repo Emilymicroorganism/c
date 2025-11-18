@@ -80,7 +80,7 @@ int main() {
 void find(int a) {
 	int i = a %10;
 	int j = (a %100 - i)/10;
-	int k = (a - 10 * j - 1 * i)/100;
+	int k = (a - 10 * j - 1 * i)/100;//或k=a/100;就中间的不好搞，头->除int自然取整消去小数，尾->取于，自然留下
 		if (i*i*i+j*j*j+k*k*k==a) {
 			cout << "是" << endl;
 		}
