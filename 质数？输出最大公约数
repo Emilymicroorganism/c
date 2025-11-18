@@ -28,3 +28,33 @@ int find(int a) {
 
 
 }
+
+//更加集中的版本，都在函数里
+#include <iostream>
+using namespace std;
+void find(int a);
+int main() {
+	int a = 0;
+	do {
+	cout << "请输入一个正整数" << endl;
+	cin >> a;
+	} while (a <= 0);
+	find(a);
+	
+		
+
+		
+	return 0;
+}
+void find(int a) {
+	for (int i = a - 1; i > 1; i--) {
+		if (a % i == 0) {
+			cout << "不是，最大的约数是" << i << endl;
+			return;
+
+		}
+	}
+	cout << "是" << endl;
+
+
+}
