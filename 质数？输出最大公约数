@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+int find(int a);
+int main() {
+	int a = 0;
+	do {
+	cout << "请输入一个正整数" << endl;
+	cin >> a;
+	} while (a <= 0);
+	int result = find(a);//可避免重复调用,与下面这个相比
+  /*if (find(a) == 0)
+        cout << "是质数" << endl;
+    else
+        cout << "不是质数，最大的约数是" << find(a) << endl;*/
+	if (result== 1)
+		cout << "是" << endl;
+	else
+		cout << "不是，最大的约数是" << result<< endl;
+
+}
+int find(int a) {
+	for (int i = a - 1; i > 1; i--) {
+		if (a % i == 0)return i;
+
+
+	}
+	return 1;
+
+
+}
