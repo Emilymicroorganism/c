@@ -58,3 +58,34 @@ void find(int a) {
 
 
 }
+
+
+//类似的改了个判断水仙花数的
+#include <iostream>
+using namespace std;
+void find(int a);
+int main() {
+	int a = 0;
+	do {
+		cout << "请输入一个3位数" << endl;
+		cin >> a;
+	} while (a <= 0);
+	find(a);
+
+
+
+
+	return 0;
+}
+void find(int a) {
+	int i = a % 100;
+	int j = (a % 10 - 10*i);
+	int k = (a - 100 * i - 10 * j);
+		if (i*i*i+j*j*j+k*k*k==a) {
+			cout << "是" << endl;
+			return;
+
+		}
+		else
+		cout << "是" << endl;
+}
