@@ -1,0 +1,16 @@
+#include <iostream>	
+using namespace std;
+long fib(int n) {
+	if (n > 2)	return(fib(n - 1) + fib(n - 2));
+	else return(1);
+}
+	int main()	
+	{ 
+		int n;
+		do{
+		cout << "请输入项数n（正整数）" << endl;
+		cin >> n;
+		} while (n <= 0);
+		cout << fib(n) << endl;
+		return 0;
+	}
