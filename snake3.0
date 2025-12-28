@@ -1,0 +1,279 @@
+#include<iostream>
+#include<conio.h>
+#include<Windows.h>
+using namespace std;
+#define width 50
+#define height 20
+#define Food_number 5
+
+// 通过将光标大小设为1并隐藏
+void hideCursorSimple(void) {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO cci;
+	cci.dwSize = 1;        // 光标大小设为1（最小）
+	cci.bVisible = FALSE;  // 隐藏
+	SetConsoleCursorInfo(hOut, &cci);
+}
+
+
+struct food_position {
+	int x;
+	int y;
+}Food[Food_number];
+
+struct key_position {
+	int x;
+	int y;
+}Key;
+
+struct head_position {
+	int x;
+	int y;
+};//不同东西的坐标分开可能好一点？
+
+struct body_position {
+	int x;
+	int y;
+} Body[width * height];//Body[0]是头
+
+
+
+struct snake {
+	int length;//不含头
+	head_position head;
+};
+
+void init_snake(snake &s) {
+	s.length = 2;
+	s.head.x = width / 2;
+	s.head.y = height / 2;//初始化在中央
+	
+	Body[0].x = s.head.x;
+	Body[0].y = s.head.y;//头丢到0，让后面的身体好跟
+
+	Body[1].x = s.head.x - 1;//第一节身体初始在头右边
+	Body[1].y = s.head.y;
+
+	Body[2].x = s.head.x - 2;//第二节在第一节右边
+	Body[2].y = s.head.y;
+}
+
+int snake_head_dont_eat_body(snake &s) {
+	for (int i = 1; i <= s.length; i++) {
+		if (s.head.x == Body[i].x && s.head.y == Body[i].y) {
+			std::cout << "不能啃自己！" << endl;
+			return 0;
+		}
+	}
+	return 1;
+}//头坐标==身体，撞身体上了：1执行
+
+int snake_head_inside(snake &s) {
+	if (s.head.x >0 && s.head.x <(width-1)
+		&& s.head.y > 0 && s.head.y < (height-1)) {
+		return 1;
+	}
+	std::cout << "边框不可食用！" << endl;
+	return 0;
+}//不出界：1执行
+
+
+//食物不生成在蛇上
+int fruit_dont_burn_inside_body(snake& s,int x,int y) {
+	for (int i = 0; i <= s.length; i++) {
+		if (x == Body[i].x && y == Body[i].y) {		
+			return 1;
+		}
+	}
+	return 0;
+}//新果子坐标==身体，1执行重新生成果子
+
+
+
+int snake_eat_fruit(food_position Food[],snake &s,int n) {
+
+	for (int i = 0; i <Food_number; i++) {
+		//while (snake_eat_fruit(Food, s, n)) {
+		if (s.head.x == Food[i].x && s.head.y == Food[i].y) {
+			do {
+			Food[i].x = rand() % width;
+			Food[i].y = rand() % height;//重新生成一个果子
+			} while (fruit_dont_burn_inside_body(s, Food[i].x, Food[i].y));//如果在蛇上就重新生成
+			return 1;
+			}
+		//}尝试用递归检测果子不生成在蛇身体上好像不太对
+	}
+	return 0;
+}//吃到果子：1执行
+
+
+
+int main() {
+	COORD coord;//来个光标
+	hideCursorSimple();//隐藏光标
+	coord.X = width / 2;
+	coord.Y = height / 2;
+	snake s;//
+
+	char key = 0;//存按键
+	key_position Key;
+	Key.x = -1;
+	Key.y = 0;
+
+	float score= 0;//记分
+	float v = 200;//sleep时间--速度
+
+	init_snake(s);
+	body_position prevBody[width * height];
+	int prevLength = s.length;//存上一次的身体长度和位置，擦除用,初始化后才有值
+
+
+
+	//生成区域
+	/*for (int i = 0; i<height; i++) {
+		for(int j=0;j<width;j++) {
+			std::cout<<"_";
+		}
+		std::cout<<endl;
+	}*/
+	
+	for (int i = 0; i<height; i++) {
+		for (int j = 0; j < width; j++) {
+			if (i == 0 || j == 0 || j == width - 1 || i == 0 || i == height - 1)
+				std::cout << "#";
+			else {
+				std::cout << " ";
+			}
+		}
+		std::cout<<endl;
+	}
+	
+	
+
+	for (int i = 0; i < Food_number; i++) {
+		Food[i].x = rand() % (width-2)+1;
+		Food[i].y = rand() % (height-2)+1;//没有处理重复的，重复--》果子数量少--》数量也随机了Food_number是最大数量
+		coord.X = Food[i].x;
+		coord.Y = Food[i].y;
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+		std::cout << "*" << endl;
+	}//画果子
+	
+
+	for (int i = 1; i <= s.length; i++) {
+		Body[i].x = Body[i - 1].x + 1;
+		Body[i].y = Body[i - 1].y;
+
+	}
+
+
+
+	do {
+		//保存上1针
+		prevLength = s.length;
+		for (int i = 0; i <= prevLength; i++) {
+			prevBody[i].x = Body[i].x;
+			prevBody[i].y = Body[i].y;
+		}
+
+
+
+
+
+		if (_kbhit()) {
+			key = _getch();
+			score += 0.001;//每活动一下，没被撞死，加点分
+			switch (key) {
+			case'w':Key.x = 0; Key.y = -1;//倒着的，-1，回开头1，才是向上
+				Beep(392, 120);Beep(494, 90);break;
+			case's':Key.x = 0; Key.y = +1; 
+				Beep(392, 100); Beep(494, 140); break;
+			case'a':Key.x = -1; Key.y = 0; 
+				Beep(440, 130); Beep(392, 130); break;
+			case'd':Key.x = +1; Key.y = 0;
+				Beep(587, 120); Beep(698, 120); break;
+			}
+		}
+							
+			Body[0].x = s.head.x;
+			Body[0].y = s.head.y;
+
+			for (int i = s.length; i > 0; i--) {
+				Body[i].x = Body[i - 1].x;
+				Body[i].y = Body[i - 1].y;
+			}//后一节跟随前y一节
+			s.head.x += Key.x;
+			s.head.y += Key.y;
+		
+		
+			
+
+		while (snake_eat_fruit(Food, s, Food_number)) {
+			Beep(1047, 150);
+			for (int i = 0; i < Food_number; i++) {
+
+				coord.X = Food[i].x;
+				coord.Y = Food[i].y;
+				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+				std::cout << "*";
+			}
+			score++;
+			s.length++;//在这长长1节
+			Body[s.length].x = Body[s.length - 1].x;//新节先放在最后一节位置
+			Body[s.length].y = Body[s.length - 1].y;
+			v--;//加速
+			if (v < 0)break;
+		}//如果吃了重画果子+响应相应
+
+		
+
+		//擦除上1针
+		for (int i = 0; i <= prevLength; i++) {
+			coord.X = prevBody[i].x;
+			coord.Y = prevBody[i].y;
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+			//std::cout << "_" << endl;
+			std::cout << " " << endl;
+		}
+		//system("cls");
+		
+		
+		//画头
+		//光标到头头
+		coord.X = s.head.x;
+		coord.Y = s.head.y;
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+		std::cout << "O" << endl;
+		//画身
+		for (int i = 1; i <= s.length; i++) {
+			coord.X = Body[i].x;
+			coord.Y = Body[i].y;
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+			std::cout << "X" << endl;
+		}
+		//出分数
+		coord.Y= height + 1;
+		coord.X= 0;
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+		std::cout << "score:" << score << endl;
+		Sleep(v);
+		
+	} while (snake_head_dont_eat_body(s)&& snake_head_inside(s));
+	
+	std::cout << "you dead!!!!" << endl;
+	return 0;
+	
+}
+//开始运行会突然把输入法切中文，但又是wsad控制的，所以要自己切回来/或者用英文语言设置卡死
+//果子生成撞蛇走大运
+
+//蛇不会自动漂移(V)
+/*原身体，头后一节生成按按键飘了，
+所以一把按键中移动部分拿出来让身体都开始飘
+就会撞上之前自动生成在头那的身体*/
+
+//吃了果子后新的身体会先出现在左上角(V)
+/*新1节初始化在了（0，0），
+因为length + 1了，循环里跟随的操作 + 1动了以后跟随前1节才又出现在末尾，
+所以当length+1时就把初始改正末尾就好，
+相当于跳过完成直接设置prevBody最后1节的操作*/
