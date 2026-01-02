@@ -1,17 +1,66 @@
 #include <graphics.h>
+#include <iostream>
 #include <conio.h>
+using namespace std;
 
+#define width 820
+#define height 820
+#define esquare_size 40
 
-void drawshape() {
+void chessboard(void) {
 	setlinecolor(RGB(21, 102, 230));
 	setlinestyle(PS_SOLID, 3);
 	setfillcolor(RGB(255, 250, 174));
 	for (int j = 10; j < getwidth() - 10; j += 40) {
-
 		for (int i = 10; i < getwidth() - 10; i += 40) {
-			Sleep(20);
-			fillroundrect(i, j, i + 40, j + 40, 10, 10);
-			if ((i ==50 && j == 10) || (i ==90 && j == 10) || (i ==130 && j == 10)||
+			Sleep(20);//停顿一下可以看到依次生成
+			fillroundrect(i, j, i + esquare_size, j + esquare_size, 10, 10);
+		}
+	}		
+}
+void interact(void) {
+	ExMessage msg = { 0 };
+	while (true) {
+		if (peekmessage(&msg, EM_MOUSE, true)) {
+			switch (msg.message) {
+			case(WM_LBUTTONDOWN): {
+				
+				int x = msg.x;
+				int y = msg.y;
+				std::cout << "Left Button Down at (" << msg.x << ", " << msg.y << ")\n";
+				setfillcolor(RGB(221, 211, 255));
+				int X = (msg.x - 10) / esquare_size * esquare_size + 10;
+				int Y= (msg.y - 10) /esquare_size * esquare_size + 10;
+				fillroundrect(X,Y, X + esquare_size, Y + esquare_size, 10, 10);
+				break;
+			}
+			}
+		}
+	}
+
+}
+
+int main()
+{
+	initgraph(width, height, EX_DBLCLKS);
+	setbkcolor(RGB(139, 196, 171));
+	cleardevice();
+	chessboard();
+	interact();
+	_getch();//卡住不立即退出
+	closegraph();
+	return 0;
+
+
+
+
+
+
+
+
+
+}
+/*if ((i ==50 && j == 10) || (i ==90 && j == 10) || (i ==130 && j == 10)||
 				(i == 50 && j == 90) || (i == 90 && j == 90) || (i == 130 && j == 90) ||
 				(i == 50 && j == 170) || (i == 90 && j == 170) || (i == 130 && j == 170) ||
 				(i == 130 && j == 50) || (i == 50 && j == 130) || 
@@ -37,21 +86,4 @@ void drawshape() {
 			setfillcolor(RGB(221, 211, 255));
 			fillroundrect(i, j, i + 40, j + 40, 10, 10);
 			setfillcolor(RGB(255, 250, 174));
-			}
-		}
-	}
-	
-	
-	
-}
-
-int main()
-{
-	initgraph(820, 820);
-	setbkcolor(RGB(139, 196, 171));
-	cleardevice();
-	drawshape();
-	_getch();//卡住不立即退出
-	closegraph();
-	return 0;
-}
+			}丢入循环内判断挑出格子画2026*/
